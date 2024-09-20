@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ video.title }}{% endblock %}
+
+{% block content %}
+<div class="container" style="text-align: center;">
+    <div>
+        <h2>{{ video.title }}</h2>
+        <div class="row">
+            <input type="text" class="form-control mb-2 col" id="searchQuery" placeholder="Search subtitles...">
+            <button class="col btn btn-outline-primary mb-2" type="submit"
+                onclick="searchSubtitles({{ subtitles_data }}, document.getElementById('searchQuery').value)">
+                Submit
+            </button>
+        </div>
+    </div>
+
+    <!-- Video Player -->
+    <video id="videoPlayer" width="70%" controls autoplay>
+        <source src="{{ video.file.url }}" type="video/mp4">
+        <track src="{{ subtitle_file }}" kind="subtitles" srclang="en" label="English" default>
+    </video>
+
+    <script>
+        let video = document.getElementById('videoPlayer');
+
+        video.addEventListener('loadedmetadata', function () {
+            console.log("Video metadata loaded. Duration:", video.duration);
+            video.play(); // Start playing the video once metadata is loaded
+        });
+
+        function searchSubtitles(subtitles, searchText) {
+            searchText = searchText.trim();
+            for (let i = 0; i < subtitles.length; i++) {
+                const subtitle = subtitles[i];
+                const text = subtitle.text;
+
+                if (text.includes(searchText)) {
+                    console.log("Matching subtitle found:", text);
+
+                    // Extract the timestamp and convert to seconds
+                    const timestamp = subtitle.timestamp; // e.g. '00:00:00,549 --> 00:00:02,451'
+                    const [startTime] = timestamp.split(' --> '); // Extract start time
+                    const seconds = timestampToSeconds(startTime);
+
+                    alert("Your video will start from " + seconds + " seconds");
+
+                    // Set the current time of the video and play
+                    video.currentTime = seconds;
+                    video.play();
+
+                    return;
+                }
+            }
+
+            alert('No matching subtitles found.');
+        }
+
+        function timestampToSeconds(timestamp) {
+            const [time, ms] = timestamp.split(',');
+            const [hours, minutes, seconds] = time.split(':').map(Number);
+            return (hours * 3600) + (minutes * 60) + seconds + (Number(ms) / 1000);
+        }
+    </script>
+</div>
+{% endblock %}

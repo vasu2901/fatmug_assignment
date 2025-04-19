@@ -103,19 +103,9 @@ urlpatterns = [
 
 ## Testing
 
-- The web application should be able to process and handle the provided sample video.
-- Screenshots of the application in action should be saved in the `screenshots/` folder.
+- The web application will process and handle the provided sample video.
+- Screenshots of the application in action will be saved in the `screenshots/` folder.
   
-## Submission
-
-- After completing the assignment, upload the project to **GitHub** and provide the repository link.
-  
-## Example Screenshots
-
-Make sure to add example screenshots of the following:
-1. Video upload page.
-2. Video list view.
-3. Video display page with subtitles and search functionality.
 
 
 
